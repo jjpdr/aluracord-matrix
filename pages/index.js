@@ -1,36 +1,7 @@
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import appConfig from "../config.json";
-
-function GlobalStyle() {
-    return (
-        <style global jsx>{`
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                list-style: none;
-            }
-            body {
-                font-family: "Open Sans", sans-serif;
-            }
-            /* App fit Height */
-            html,
-            body,
-            #__next {
-                min-height: 100vh;
-                display: flex;
-                flex: 1;
-            }
-            #__next {
-                flex: 1;
-            }
-            #__next > * {
-                flex: 1;
-            }
-            /* ./App fit Height */
-        `}</style>
-    );
-}
 
 function Titulo(props) {
     const Tag = props.tag || "h1";
@@ -49,11 +20,11 @@ function Titulo(props) {
 }
 
 export default function PaginaInicial() {
-    const username = "peas";
+    const [username, setUsername] = useState("");
+    const roteamento = useRouter();
 
     return (
         <>
-            <GlobalStyle />
             <Box
                 styleSheet={{
                     display: "flex",
@@ -88,6 +59,11 @@ export default function PaginaInicial() {
                     {/* Formulário */}
                     <Box
                         as="form"
+                        onSubmit={(event) => {
+                            event.preventDefault();
+
+                            roteamento.push("/chat");
+                        }}
                         styleSheet={{
                             display: "flex",
                             flexDirection: "column",
@@ -110,6 +86,10 @@ export default function PaginaInicial() {
                         </Text>
 
                         <TextField
+                            value={username}
+                            onChange={(event) => {
+                                setUsername(event.target.value);
+                            }}
                             fullWidth
                             textFieldColors={{
                                 neutral: {
@@ -158,25 +138,31 @@ export default function PaginaInicial() {
                             minHeight: "240px",
                         }}
                     >
-                        <Image
-                            styleSheet={{
-                                borderRadius: "50%",
-                                marginBottom: "16px",
-                            }}
-                            src={`https://github.com/${username}.png`}
-                        />
-                        <Text
-                            variant="body4"
-                            styleSheet={{
-                                color: appConfig.theme.colors.neutrals[200],
-                                backgroundColor:
-                                    appConfig.theme.colors.neutrals[900],
-                                padding: "3px 10px",
-                                borderRadius: "1000px",
-                            }}
-                        >
-                            {username}
-                        </Text>
+                        {username.length > 2 && (
+                            <>
+                                <Image
+                                    styleSheet={{
+                                        borderRadius: "50%",
+                                        marginBottom: "16px",
+                                    }}
+                                    src={`https://github.com/${username}.png`}
+                                />
+                                <Text
+                                    variant="body4"
+                                    styleSheet={{
+                                        color: appConfig.theme.colors
+                                            .neutrals[200],
+                                        backgroundColor:
+                                            appConfig.theme.colors
+                                                .neutrals[900],
+                                        padding: "3px 10px",
+                                        borderRadius: "1000px",
+                                    }}
+                                >
+                                    {username}
+                                </Text>
+                            </>
+                        )}
                     </Box>
                     {/* Photo Area */}
                 </Box>
